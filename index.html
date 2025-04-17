@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      gap: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      text-align: center;
+      /* Центрирование текста */
+      padding: 40px;
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    }
+
+    input#barcodeInput {
+      font-size: 24px;
+      padding: 10px;
+      width: 300px;
+      text-align: center;
+    }
+
+    .barcode_text {
+      font-size: 28px;
+      font-weight: bold;
+      color: black;
+    }
+  </style>
+  <title>QR cpde scanner</title>
+</head>
+
+<body>
+
+  <div class="container">
+    <input id="barcodeInput" type="text" autocomplete="off" />
+    <div class="barcode_text">Ожидание сканирования...</div>
+  </div>
+
+  <script>
+    const input = document.getElementById('barcodeInput');
+    const output = document.querySelector('.barcode_text');
+
+    const layoutMap = {
+      'ф': 'a', 'и': 'b', 'с': 'c', 'в': 'd', 'у': 'e', 'а': 'f', 'п': 'g', 'р': 'h', 'ш': 'i', 'о': 'j',
+      'л': 'k', 'д': 'l', 'ь': 'm', 'т': 'n', 'щ': 'o', 'з': 'p', 'й': 'q', 'к': 'r', 'ы': 's', 'е': 't',
+      'г': 'u', 'м': 'v', 'ц': 'w', 'ч': 'x', 'н': 'y', 'я': 'z',
+      'Ф': 'A', 'И': 'B', 'С': 'C', 'В': 'D', 'У': 'E', 'А': 'F', 'П': 'G', 'Р': 'H', 'Ш': 'I', 'О': 'J',
+      'Л': 'K', 'Д': 'L', 'Ь': 'M', 'Т': 'N', 'Щ': 'O', 'З': 'P', 'Й': 'Q', 'К': 'R', 'Ы': 'S', 'Е': 'T',
+      'Г': 'U', 'М': 'V', 'Ц': 'W', 'Ч': 'X', 'Н': 'Y', 'Я': 'Z'
+    };
+
+    function fixLayout(text) {
+      return text.split('').map(char => layoutMap[char] || char).join('');
+    }
+
+
+    input.addEventListener('keydown', e => {
+
+      if (e.key === 'Enter'){
+        let text = input.value.trim();
+        text = fixLayout(text);
+        handleBarcode(text);
+        input.value = '';
+      }
+
+    });
+
+    function handleBarcode(text){
+      output.innerText = `Штрих код: ${text}`;
+    }
+
+
+    window.onload = () => {
+      input.focus();
+      setInterval( ()=> {
+        if (document.activeElement !== input) input.focus;
+      }, 3000)
+    };
+
+  </script>
+
+</body>
+
+</html>
